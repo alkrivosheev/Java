@@ -19,42 +19,15 @@
             <artifactId>guava</artifactId>
             <version>23.0</version>
         </dependency>
-        <!-- <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant</artifactId>
-            <version>1.10.11</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-core</artifactId>
-            <version>3.8.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-artifact</artifactId>
-            <version>3.8.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-archiver</artifactId>
-            <version>3.5.2</version>
-        </dependency> -->
     </dependencies>
 
     <build>
         <finalName>${project.name}</finalName>
         <plugins>
-            <!-- <plugin>
-                <groupId>com.GitHub.wvengen</groupId>
+            <plugin>
+                <groupId>com.github.wvengen</groupId>
                 <artifactId>proguard-maven-plugin</artifactId>
-                <version>2.3.1</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>net.sf.proguard</groupId>
-                        <artifactId>proguard-base</artifactId>
-                        <version>6.0.2</version>
-                    </dependency>
-                </dependencies>
+                <version>2.0.14</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -64,27 +37,41 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <proguardVersion>6.0.2</proguardVersion>
-                    <obfuscate>false</obfuscate>
-                    <injar>${project.build.finalName}.jar</injar>
-                    <outjar>${project.build.finalName}.jar</outjar>
-                    <includeDependency>true</includeDependency>
+                    <obfuscate>true</obfuscate>
+                    <attach>true</attach>
+                    <appendClassifier>false</appendClassifier>
                     <addMavenDescriptor>true</addMavenDescriptor>
-                    <silent>true</silent>
-                    <options>
-                        <option>-dontshrink</option>
-                        <option>-optimizations no_optimizations</option>
-                        <option>-keep class com.X.model.** { public protected private *; }</option>
-                        <option>-keep class com.X.rest.service.** { public protected private *; }</option>
-                        <option>-keepnames class ** { public protected *; }</option>
-                        <option>-keepattributes *Annotation*,Signature,EnclosingMethod,InnerClasses,Exceptions,MethodParameters,SourceFile,LineNumberTable</option>
-                    </options>
+                    <injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
+                    <injarNotExistsSkip>true</injarNotExistsSkip>
                     <libs>
                         <lib>${java.home}/lib/rt.jar</lib>
                         <lib>${java.home}/lib/jce.jar</lib>
+                        <lib>${java.home}/lib/ext/sunjce_provider.jar</lib>
                     </libs>
+                    <options>
+                        <option>-allowaccessmodification</option>
+                        <option>-optimizationpasses 3</option>
+                        <option>-overloadaggressively</option>
+                        <option>-repackageclasses ''</option>
+                        <option>-dontusemixedcaseclassnames</option>
+                        <option>-dontskipnonpubliclibraryclasses</option>
+                        <option>-flattenpackagehierarch</option>
+                        <option>-dontwarn</option> <!-- added option to ignore com.sun missing classes -->
+                        <option>-keep public class com.StocksNews.App {
+                            public static void main(java.lang.String[]);
+                            }
+                        </option>
+                    </options>
                 </configuration>
-            </plugin> -->
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sf.proguard</groupId>
+                        <artifactId>proguard-base</artifactId>
+                        <version>6.1.1</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
